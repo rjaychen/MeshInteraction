@@ -12,7 +12,6 @@ struct ImmersiveView: View {
         RealityView { content in
             content.add(viewModel.setupContentEntity())
             viewModel.appState = appState
-
             Task {
                 await viewModel.runARKitSession()
             }

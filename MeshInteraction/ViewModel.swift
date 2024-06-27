@@ -2,6 +2,7 @@ import ARKit
 import SwiftUI
 import RealityKit
 import Accelerate
+import RealityKitContent
 
 @Observable
 class ViewModel {
@@ -117,10 +118,19 @@ class ViewModel {
         }
         let meshResource = try MeshResource.generate(from: [desc])
         // Customize Model Entity
-        var material = SimpleMaterial(color: .green.withAlphaComponent(0.8), isMetallic: false)
-        material.triangleFillMode = .lines
-        let modelEntity = ModelEntity(mesh: meshResource, materials: [material])
-        return modelEntity
+        //var material = SimpleMaterial(color: .green.withAlphaComponent(0.8), isMetallic: false)
+        //material.triangleFillMode = .lines
+        if appState!.useMatrixShader {
+            let material = try! await ShaderGraphMaterial(named: "/Root/Matrix", from: "MatrixMaterial", in: realityKitContentBundle)
+            let modelEntity = ModelEntity(mesh: meshResource, materials: [material])
+            return modelEntity
+        }
+        else { 
+            var material = SimpleMaterial(color: .green.withAlphaComponent(0.8), isMetallic: false)
+            material.triangleFillMode = .lines
+            let modelEntity = ModelEntity(mesh: meshResource, materials: [material])
+            return modelEntity
+        }
     }
     
     func addCube(tapLocation: SIMD3<Float>) {

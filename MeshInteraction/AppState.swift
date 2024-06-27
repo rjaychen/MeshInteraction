@@ -12,6 +12,7 @@ class AppState {
 
     var boundingRadius: Float = 0.3
     var visualizeSceneMeshes: Bool = false
+    var useMatrixShader: Bool = false
     
     func isImmersiveSpaceOpened(with viewModel: ViewModel) {
         self.viewModel = viewModel

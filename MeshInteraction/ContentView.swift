@@ -45,6 +45,7 @@ struct ContentView: View {
                     }
                 }
                 Toggle("Scene Mesh", isOn: $appState.visualizeSceneMeshes).padding()
+                Toggle("Matrix Shader", isOn: $appState.useMatrixShader).padding()
             } else {
                 VStack {
                     Spacer()
