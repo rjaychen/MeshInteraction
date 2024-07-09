@@ -18,6 +18,9 @@
 		3274A4AF2C23662E000ED7B3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3274A4A82C23662E000ED7B3 /* AppState.swift */; };
 		3274A4B02C23662E000ED7B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3274A4A92C23662E000ED7B3 /* ContentView.swift */; };
 		32801E1F2C25DA7F000D8910 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32801E1E2C25DA7D000D8910 /* Extensions.swift */; };
+		3299873E2C3D8A4900CD701D /* ModelHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299873D2C3D8A4300CD701D /* ModelHandler.swift */; };
+		329987402C3D8B4300CD701D /* LaMa.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 3299873F2C3D8B4300CD701D /* LaMa.mlpackage */; };
+		329987422C3D8B4900CD701D /* u2netp.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 329987412C3D8B4900CD701D /* u2netp.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		3274A4AA2C23662E000ED7B3 /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
 		3274A4AB2C23662E000ED7B3 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		32801E1E2C25DA7D000D8910 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		3299873D2C3D8A4300CD701D /* ModelHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelHandler.swift; sourceTree = "<group>"; };
+		3299873F2C3D8B4300CD701D /* LaMa.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = LaMa.mlpackage; sourceTree = "<group>"; };
+		329987412C3D8B4900CD701D /* u2netp.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = u2netp.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +113,10 @@
 				3274A4A92C23662E000ED7B3 /* ContentView.swift */,
 				3274A4AA2C23662E000ED7B3 /* ImmersiveView.swift */,
 				3274A4AB2C23662E000ED7B3 /* ViewModel.swift */,
+				3299873D2C3D8A4300CD701D /* ModelHandler.swift */,
 				32801E1E2C25DA7D000D8910 /* Extensions.swift */,
+				3299873F2C3D8B4300CD701D /* LaMa.mlpackage */,
+				329987412C3D8B4900CD701D /* u2netp.mlmodel */,
 				3211789E2C29F7F80075DD73 /* applepay.mp3 */,
 				3274A48B2C235CAA000ED7B3 /* Assets.xcassets */,
 				3274A4902C235CAA000ED7B3 /* Info.plist */,
@@ -229,7 +238,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3299873E2C3D8A4900CD701D /* ModelHandler.swift in Sources */,
 				3274A4AC2C23662E000ED7B3 /* ImmersiveView.swift in Sources */,
+				329987422C3D8B4900CD701D /* u2netp.mlmodel in Sources */,
+				329987402C3D8B4300CD701D /* LaMa.mlpackage in Sources */,
 				32801E1F2C25DA7F000D8910 /* Extensions.swift in Sources */,
 				3274A4AD2C23662E000ED7B3 /* ViewModel.swift in Sources */,
 				3274A4AE2C23662E000ED7B3 /* MeshInteractionApp.swift in Sources */,
@@ -398,7 +410,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 7;
-				XROS_DEPLOYMENT_TARGET = 1.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -425,7 +437,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 7;
-				XROS_DEPLOYMENT_TARGET = 1.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};

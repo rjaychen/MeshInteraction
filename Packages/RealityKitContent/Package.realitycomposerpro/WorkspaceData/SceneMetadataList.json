@@ -39,7 +39,8 @@
     "objectMetadataList" : [
       [
         "AF09ED6F-1707-48FD-8720-65B998362C09",
-        "Root"
+        "Root",
+        "Sphere_Left"
       ],
       {
         "isExpanded" : true,
@@ -47,8 +48,7 @@
       },
       [
         "AF09ED6F-1707-48FD-8720-65B998362C09",
-        "Root",
-        "Sphere_Left"
+        "Root"
       ],
       {
         "isExpanded" : true,
@@ -65,12 +65,32 @@
       }
     ]
   },
+  "C59783A6-9EF6-4E4C-894E-4320171F0DF8" : {
+    "objectMetadataList" : [
+      [
+        "C59783A6-9EF6-4E4C-894E-4320171F0DF8",
+        "Root",
+        "ProjectMaterial"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C59783A6-9EF6-4E4C-894E-4320171F0DF8",
+        "Root"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      }
+    ]
+  },
   "CB766F92-EE55-4A63-9401-E7B8C009764D" : {
     "objectMetadataList" : [
       [
         "CB766F92-EE55-4A63-9401-E7B8C009764D",
-        "Root",
-        "GridMaterial"
+        "Root"
       ],
       {
         "isExpanded" : true,
@@ -78,7 +98,8 @@
       },
       [
         "CB766F92-EE55-4A63-9401-E7B8C009764D",
-        "Root"
+        "Root",
+        "GridMaterial"
       ],
       {
         "isExpanded" : true,
@@ -117,9 +138,7 @@
     "objectMetadataList" : [
       [
         "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
-        "Root",
-        "Matrix",
-        "text"
+        "Root"
       ],
       {
         "isExpanded" : true,
@@ -136,7 +155,9 @@
       },
       [
         "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
-        "Root"
+        "Root",
+        "Shader",
+        "text"
       ],
       {
         "isExpanded" : true,
@@ -145,7 +166,7 @@
       [
         "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
         "Root",
-        "Shader",
+        "Matrix",
         "text"
       ],
       {

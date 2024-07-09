@@ -1,0 +1,126 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.0.500.6)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    def Material "ProjectMaterial"
+    {
+        prepend token outputs:mtlx:surface.connect = </Root/ProjectMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (335.25, 100.5)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 23
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor.connect = </Root/ProjectMaterial/TiledImage.outputs:out>
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (93.5, 100.5)
+            int ui:nodegraph:node:stackingOrder = 2
+        }
+
+        def Shader "TiledImage"
+        {
+            uniform token info:id = "ND_tiledimage_color3"
+            color3f inputs:default
+            asset inputs:file = @Materials/texture2d/checkerboard.png@
+            string inputs:filtertype = "linear"
+            float2 inputs:realworldimagesize
+            float2 inputs:realworldtilesize
+            float2 inputs:texcoord.connect = </Root/ProjectMaterial/Normalize.outputs:out>
+            float2 inputs:uvoffset
+            float2 inputs:uvtiling
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-222.70184, 87.38361)
+            int ui:nodegraph:node:stackingOrder = 543
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:texcoord"]
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            string inputs:space = "world"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-948.7578, -75.53855)
+            int ui:nodegraph:node:stackingOrder = 539
+        }
+
+        def Shader "SurfaceWorldToView"
+        {
+            uniform token info:id = "ND_realitykit_surface_world_to_view"
+            matrix4d outputs:worldToView
+            float2 ui:nodegraph:node:pos = (-860.82544, 37.245228)
+            int ui:nodegraph:node:stackingOrder = 537
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:worldToView"]
+        }
+
+        def Shader "Multiply"
+        {
+            uniform token info:id = "ND_multiply_matrix44_vector4"
+            prepend matrix4d inputs:in1.connect = </Root/ProjectMaterial/SurfaceWorldToView.outputs:worldToView>
+            float4 inputs:in2.connect = </Root/ProjectMaterial/Swizzle.outputs:out>
+            float4 outputs:out
+            float2 ui:nodegraph:node:pos = (-555.30145, -54.656116)
+            int ui:nodegraph:node:stackingOrder = 294
+        }
+
+        def Shader "Swizzle"
+        {
+            uniform token info:id = "ND_swizzle_vector3_vector4"
+            string inputs:channels = "xyz0"
+            prepend float3 inputs:in.connect = </Root/ProjectMaterial/Position.outputs:out>
+            float4 outputs:out
+            float2 ui:nodegraph:node:pos = (-780.7517, -72.82479)
+            int ui:nodegraph:node:stackingOrder = 540
+        }
+
+        def Shader "GeometryModifierViewToProjection"
+        {
+            uniform token info:id = "ND_realitykit_geometry_modifier_view_to_projection"
+            matrix4d outputs:viewToProjection
+            float2 ui:nodegraph:node:pos = (-862.32227, 153.5048)
+            int ui:nodegraph:node:stackingOrder = 548
+        }
+
+        def Shader "Multiply_1"
+        {
+            uniform token info:id = "ND_multiply_matrix44_vector4"
+            prepend matrix4d inputs:in1.connect = </Root/ProjectMaterial/GeometryModifierViewToProjection.outputs:viewToProjection>
+            float4 inputs:in2.connect = </Root/ProjectMaterial/Multiply.outputs:out>
+            float4 outputs:out
+            float2 ui:nodegraph:node:pos = (-558.9095, 108.04134)
+            int ui:nodegraph:node:stackingOrder = 320
+        }
+
+        def Shader "Swizzle_1"
+        {
+            uniform token info:id = "ND_swizzle_vector4_vector2"
+            string inputs:channels = "xy"
+            float4 inputs:in.connect = </Root/ProjectMaterial/Multiply_1.outputs:out>
+            float2 outputs:out
+            float2 ui:nodegraph:node:pos = (-534.04706, 238.85715)
+            int ui:nodegraph:node:stackingOrder = 541
+        }
+
+        def Shader "Normalize"
+        {
+            uniform token info:id = "ND_normalize_vector2"
+            float2 inputs:in.connect = </Root/ProjectMaterial/Swizzle_1.outputs:out>
+            float2 outputs:out
+            float2 ui:nodegraph:node:pos = (-538.021, 311.94824)
+            int ui:nodegraph:node:stackingOrder = 545
+        }
+    }
+}
+

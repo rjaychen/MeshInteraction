@@ -16,7 +16,7 @@ struct MeshInteractionApp: App {
             )
         }
         .defaultSize(CGSize(width: 480, height: 640))
-
+        
         ImmersiveSpace(id: "ImmersiveSpace") {
             ImmersiveView(
                 appState: appState

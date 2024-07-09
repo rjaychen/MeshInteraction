@@ -31,7 +31,7 @@ def Xform "Root"
             token outputs:out
             float2 ui:nodegraph:node:pos = (-114.894394, -8.724106)
             float2 ui:nodegraph:node:size = (194.5, 181)
-            int ui:nodegraph:node:stackingOrder = 1488
+            int ui:nodegraph:node:stackingOrder = 1495
             string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:opacity", "inputs:opacityThreshold"]
         }
 
@@ -57,7 +57,7 @@ def Xform "Root"
             float outputs:output_red.connect = </Root/Matrix/text/Separate3.outputs:outr>
             float2 ui:nodegraph:node:pos = (-663.2176, 3.352464)
             float2 ui:nodegraph:node:size = (105.5, 109)
-            int ui:nodegraph:node:stackingOrder = 1182
+            int ui:nodegraph:node:stackingOrder = 1498
             float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (2562.2444, 276.17154)
             float2 ui:nodegraph:realitykit:subgraphOutputs:size = (151.1005, 81)
             int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 815
@@ -152,7 +152,7 @@ def Xform "Root"
             def Shader "Image_1"
             {
                 uniform token info:id = "ND_image_vector2"
-                asset inputs:file = @Materials/New Folder/rgba_noise_medium.png@
+                asset inputs:file = @Materials/texture2d/rgba_noise_medium.png@
                 string inputs:filtertype
                 float2 inputs:texcoord.connect = </Root/Matrix/text/Add_1.outputs:out>
                 string inputs:uaddressmode
@@ -160,7 +160,7 @@ def Xform "Root"
                 float2 outputs:out
                 float2 ui:nodegraph:node:pos = (1335.5, 259.625)
                 float2 ui:nodegraph:node:size = (148.5, 199)
-                int ui:nodegraph:node:stackingOrder = 803
+                int ui:nodegraph:node:stackingOrder = 814
                 string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:uaddressmode"]
             }
 
@@ -200,7 +200,7 @@ def Xform "Root"
             {
                 uniform token info:id = "ND_image_color3"
                 color3f inputs:default
-                asset inputs:file = @Materials/New Folder/fonts_textures.png@
+                asset inputs:file = @Materials/texture2d/fonts_textures.png@
                 string inputs:filtertype
                 float2 inputs:texcoord.connect = </Root/Matrix/text/Divide_3.outputs:out>
                 string inputs:uaddressmode
@@ -208,7 +208,7 @@ def Xform "Root"
                 color3f outputs:out
                 float2 ui:nodegraph:node:pos = (2110.25, 289.73438)
                 float2 ui:nodegraph:node:size = (148.5, 199)
-                int ui:nodegraph:node:stackingOrder = 803
+                int ui:nodegraph:node:stackingOrder = 815
                 string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:file", "outputs:out"]
             }
 

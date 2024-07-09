@@ -2,9 +2,13 @@
   "advancedEditorSelectedIdentifier" : "ShaderGraphEditorPluginID",
   "openSceneRelativePaths" : [
     "Immersive.usda",
-    "MatrixMaterial.usda"
+    "MatrixMaterial.usda",
+    "ProjectMaterial.usda"
   ],
   "recentIdentifiers" : {
+    "C59783A6-9EF6-4E4C-894E-4320171F0DF8" : [
+
+    ],
     "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8" : [
 
     ]
@@ -34,6 +38,52 @@
         ]
       }
     ],
+    "C59783A6-9EF6-4E4C-894E-4320171F0DF8" : [
+      {
+        "date" : 741561278.890239,
+        "title" : "Untitled",
+        "transform" : [
+          1,
+          0,
+          -0,
+          0,
+          -0,
+          0.7071069,
+          -0.7071067,
+          0,
+          0,
+          0.7071067,
+          0.7071069,
+          0,
+          -1.1920929e-07,
+          0.12217188,
+          0.12217188,
+          1
+        ]
+      },
+      {
+        "date" : 741556079.634634,
+        "title" : "Untitled",
+        "transform" : [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.7071069,
+          -0.70710677,
+          0,
+          0,
+          0.70710677,
+          0.7071069,
+          0,
+          0,
+          1.7157704,
+          1.7157706,
+          1
+        ]
+      }
+    ],
     "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8" : [
       {
         "date" : 741199202.313148,
@@ -59,5 +109,5 @@
       }
     ]
   },
-  "selectedSceneRelativePath" : "MatrixMaterial.usda"
+  "selectedSceneRelativePath" : "ProjectMaterial.usda"
 }

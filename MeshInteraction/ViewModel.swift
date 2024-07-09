@@ -25,6 +25,7 @@ class ViewModel {
     private var meshAnchors = [UUID: MeshAnchor]()
     private var newMeshes = [ModelEntity]()
     private var audioFilePath = "/applepay.mp3"
+    private var projectiveMaterial: ShaderGraphMaterial? = nil
     
     func setupContentEntity() -> Entity {
         for entity in fingerEntities.values {
@@ -47,6 +48,7 @@ class ViewModel {
     func runARKitSession() async {
         do {
             try await appState!.arkitSession.run([handTracking, sceneReconstruction])
+            projectiveMaterial = try await ShaderGraphMaterial(named: "/Root/ProjectMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
         } catch {
             return
         }
@@ -158,7 +160,7 @@ class ViewModel {
     
     /// Creates a mesh object from the mesh anchors based on a bounding radius provided.
     @MainActor
-    func createBoundingEntity(location: SIMD3<Float>) {
+    func createBoundingEntity(location: SIMD3<Float>){
         location3D = location
         //newMeshes.first?.removeFromParent()
         newMeshes.forEach {mesh in mesh.removeFromParent()}
@@ -207,6 +209,8 @@ class ViewModel {
                     var mat = SimpleMaterial(color: .magenta, isMetallic: false)
                     mat.triangleFillMode = .lines
                     let newMeshEntity = ModelEntity(mesh: meshResource, materials: [mat])
+                    //let newMeshEntity = ModelEntity(mesh: meshResource, materials: [projectiveMaterial!])
+                    
                     let resource = try! AudioFileResource.load(named: audioFilePath)
                     newMeshEntity.playAudio(resource)
                     newMeshes.append(newMeshEntity)
