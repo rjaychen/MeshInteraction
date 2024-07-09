@@ -14,6 +14,7 @@ struct ImmersiveView: View {
             content.add(viewModel.setupContentEntity())
             viewModel.appState = appState
             Task {
+                await viewModel.loadMaterial()
                 await viewModel.runARKitSession()
             }
         }
@@ -26,7 +27,13 @@ struct ImmersiveView: View {
         .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
             let location3D = value.convert(value.location3D, from: .local, to: .scene)
             print(location3D)
-            viewModel.createBoundingEntity(location: location3D)
+            let image = UIImage(named: "dog")
+            Task{
+                if let inpainted = await modelHandler.processImage(image!) {
+                    await viewModel.setMaterialTexture(uiImage: inpainted)
+                    viewModel.createBoundingEntity(location: location3D)
+                }
+            }
         })
         .onAppear() {
             print("Entering immersive space.")

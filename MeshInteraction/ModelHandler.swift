@@ -46,18 +46,20 @@ class ModelHandler: ObservableObject {
         })
     }
 
-    func processImage(_ uiImage: UIImage) {
+    func processImage(_ uiImage: UIImage) async -> UIImage? {
         guard let ciImage = CIImage(image: uiImage) else {
             fatalError()
         }
-
         let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
-        DispatchQueue.global(qos: .userInteractive).async {
-            do {
-                try handler.perform([self.segmentation_request])
-                self.inpaint_with_lama(inputImage: uiImage, mask: self.mask!)
-            } catch {
-                fatalError()
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    try handler.perform([self.segmentation_request])
+                    self.inpaint_with_lama(inputImage: uiImage, mask: self.mask!)
+                    continuation.resume(returning: self.resultImage)
+                } catch {
+                    fatalError()
+                }
             }
         }
     }

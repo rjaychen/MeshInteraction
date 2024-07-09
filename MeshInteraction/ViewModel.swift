@@ -11,6 +11,7 @@ class ViewModel {
 
     let handTracking = HandTrackingProvider()
     let sceneReconstruction = SceneReconstructionProvider()
+    let worldTracking = WorldTrackingProvider()
     let contentEntity = Entity()
 
     private var meshEntities = [UUID: ModelEntity]()
@@ -26,6 +27,23 @@ class ViewModel {
     private var newMeshes = [ModelEntity]()
     private var audioFilePath = "/applepay.mp3"
     private var projectiveMaterial: ShaderGraphMaterial? = nil
+    private var matrixMaterial: ShaderGraphMaterial? = nil
+    
+    func loadMaterial() async {
+        projectiveMaterial = try! await ShaderGraphMaterial(named: "/Root/ProjectMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
+        if projectiveMaterial != nil {
+            try! await projectiveMaterial?.setParameter(name: "uiImage", value: .textureResource(TextureResource(named: "checkerboard")))
+            print("PTM loaded")
+            //projectiveMaterial?.faceCulling = .back
+        } else {
+            print("PTM loading unsuccessful") }
+        matrixMaterial = try! await ShaderGraphMaterial(named: "/Root/Matrix", from: "MatrixMaterial", in: realityKitContentBundle)
+        if matrixMaterial != nil { print("Matrix loaded") } else { print("Matrix failed to load.") }
+    }
+    
+    func setMaterialTexture(uiImage: UIImage) async {
+        try! await projectiveMaterial?.setParameter(name: "uiImage", value: .textureResource(TextureResource(image: uiImage.cgImage!, options: .init(semantic: .color))))
+    }
     
     func setupContentEntity() -> Entity {
         for entity in fingerEntities.values {
@@ -47,8 +65,7 @@ class ViewModel {
     @MainActor
     func runARKitSession() async {
         do {
-            try await appState!.arkitSession.run([handTracking, sceneReconstruction])
-            projectiveMaterial = try await ShaderGraphMaterial(named: "/Root/ProjectMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
+            try await appState!.arkitSession.run([handTracking, sceneReconstruction, worldTracking])
         } catch {
             return
         }
@@ -100,6 +117,12 @@ class ViewModel {
         }
     }
 
+    func getDeviceTransform() async -> simd_float4x4 {
+        guard let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+            else { return .init() }
+            return deviceAnchor.originFromAnchorTransform
+        }
+    
     @MainActor
     func generateModelEntity(geometry: MeshAnchor.Geometry) async throws -> ModelEntity {
         // Generate MeshResource from MeshAnchor Geometry
@@ -123,8 +146,7 @@ class ViewModel {
         //var material = SimpleMaterial(color: .green.withAlphaComponent(0.8), isMetallic: false)
         //material.triangleFillMode = .lines
         if appState!.useMatrixShader {
-            let material = try! await ShaderGraphMaterial(named: "/Root/Matrix", from: "MatrixMaterial", in: realityKitContentBundle)
-            let modelEntity = ModelEntity(mesh: meshResource, materials: [material])
+            let modelEntity = ModelEntity(mesh: meshResource, materials: [matrixMaterial!])
             return modelEntity
         }
         else { 
@@ -206,15 +228,21 @@ class ViewModel {
                 meshDescriptor.normals = .init(newNormals)
                 if meshDescriptor.positions.count > 0 {
                     let meshResource = try! MeshResource.generate(from: [meshDescriptor])
-                    var mat = SimpleMaterial(color: .magenta, isMetallic: false)
-                    mat.triangleFillMode = .lines
-                    let newMeshEntity = ModelEntity(mesh: meshResource, materials: [mat])
-                    //let newMeshEntity = ModelEntity(mesh: meshResource, materials: [projectiveMaterial!])
+                    //var mat = SimpleMaterial(color: .magenta, isMetallic: false)
+                    //mat.triangleFillMode = .lines
+                    //let newMeshEntity = ModelEntity(mesh: meshResource, materials: [mat])
                     
-                    let resource = try! AudioFileResource.load(named: audioFilePath)
-                    newMeshEntity.playAudio(resource)
-                    newMeshes.append(newMeshEntity)
-                    contentEntity.addChild(newMeshEntity)
+                    let newMeshEntity = ModelEntity(mesh: meshResource, materials: [projectiveMaterial!])
+                    // MARK: We need to calculate the matrices at runtime and pass them as parameters. This should solve any existing artifact problems. Consider using a LowLevelTexture with a GPU compute kernel. Also look into Sparse Voxel Octrees.
+                    Task {
+                        let viewMatrix = await getDeviceTransform()
+                        print(viewMatrix.columns.3.x, viewMatrix.columns.3.y, viewMatrix.columns.3.z)
+                        try! projectiveMaterial?.setParameter(name: "viewMatrix", value: .float4x4(viewMatrix))
+                        let resource = try! AudioFileResource.load(named: audioFilePath)
+                        newMeshEntity.playAudio(resource)
+                        newMeshes.append(newMeshEntity)
+                        contentEntity.addChild(newMeshEntity)
+                    }
                 }
             }
         }
