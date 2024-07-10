@@ -235,8 +235,9 @@ class ViewModel {
                     let newMeshEntity = ModelEntity(mesh: meshResource, materials: [projectiveMaterial!])
                     // MARK: We need to calculate the matrices at runtime and pass them as parameters. This should solve any existing artifact problems. Consider using a LowLevelTexture with a GPU compute kernel. Also look into Sparse Voxel Octrees.
                     Task {
-                        let viewMatrix = await getDeviceTransform()
-                        print(viewMatrix.columns.3.x, viewMatrix.columns.3.y, viewMatrix.columns.3.z)
+                        let cameraMatrix = await getDeviceTransform()
+                        let viewMatrix = cameraMatrix.inverse
+                        //print(viewMatrix.columns.3.x, viewMatrix.columns.3.y, viewMatrix.columns.3.z)
                         try! projectiveMaterial?.setParameter(name: "viewMatrix", value: .float4x4(viewMatrix))
                         let resource = try! AudioFileResource.load(named: audioFilePath)
                         newMeshEntity.playAudio(resource)

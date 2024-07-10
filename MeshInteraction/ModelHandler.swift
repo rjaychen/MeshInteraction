@@ -9,7 +9,6 @@ import SwiftUI
 import Vision
 
 class ModelHandler: ObservableObject {
-    @Published var resultImage: UIImage?
     @Published var mask: UIImage?
     private var segmentation_request: VNCoreMLRequest!
     private var inpainting_request: VNCoreMLRequest!
@@ -55,8 +54,13 @@ class ModelHandler: ObservableObject {
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
                     try handler.perform([self.segmentation_request])
-                    self.inpaint_with_lama(inputImage: uiImage, mask: self.mask!)
-                    continuation.resume(returning: self.resultImage)
+                    Task{
+                        if let resultImage = await self.inpaint_with_lama(inputImage: uiImage, mask: self.mask!) {
+                            continuation.resume(returning: resultImage)
+                        } else {
+                            continuation.resume(returning: nil)
+                        }
+                    }
                 } catch {
                     fatalError()
                 }
@@ -64,30 +68,34 @@ class ModelHandler: ObservableObject {
         }
     }
     
-    func inpaint_with_lama(inputImage: UIImage, mask: UIImage) {
+    func inpaint_with_lama(inputImage: UIImage, mask: UIImage) async -> UIImage? {
         guard let model = inpainting else { fatalError("can't load inpainting model.") }
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                var input: LaMaInput?
-                input = try LaMaInput(imageWith: inputImage.cgImage! , maskWith: mask.cgImage!)
-                
-                let start = Date()
-                
-                let out = try! model.prediction(input: input!)
-                let pixelBuffer = out.output
-                let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-                let context = CIContext()
-                guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { fatalError() }
-                DispatchQueue.main.async {
-                    self.resultImage = UIImage(cgImage: cgImage)
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                do {
+                    var input: LaMaInput?
+                    input = try LaMaInput(imageWith: inputImage.cgImage! , maskWith: mask.cgImage!)
                     
+                    let start = Date()
+                    
+                    let out = try! model.prediction(input: input!)
+                    let pixelBuffer = out.output
+                    let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+                    let context = CIContext()
+                    guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+                        continuation.resume(returning: nil)
+                        return
+                    }
+                    let resultImage = UIImage(cgImage: cgImage)
+                    
+                    let timeElapsed = -start.timeIntervalSinceNow
+                    print(timeElapsed)
+                    
+                    continuation.resume(returning: resultImage)
+                } catch let error {
+                    print(error)
+                    continuation.resume(returning: nil)
                 }
-                let timeElapsed = -start.timeIntervalSinceNow
-                
-                print(timeElapsed)
-                
-            } catch let error {
-                print(error)
             }
         }
     }
