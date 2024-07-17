@@ -39,6 +39,15 @@
     "objectMetadataList" : [
       [
         "AF09ED6F-1707-48FD-8720-65B998362C09",
+        "Root",
+        "Sphere_Left"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "AF09ED6F-1707-48FD-8720-65B998362C09",
         "Root"
       ],
       {
@@ -53,15 +62,6 @@
       {
         "isExpanded" : true,
         "isLocked" : false
-      },
-      [
-        "AF09ED6F-1707-48FD-8720-65B998362C09",
-        "Root",
-        "Sphere_Left"
-      ],
-      {
-        "isExpanded" : true,
-        "isLocked" : false
       }
     ]
   },
@@ -69,7 +69,8 @@
     "objectMetadataList" : [
       [
         "C59783A6-9EF6-4E4C-894E-4320171F0DF8",
-        "Root"
+        "Root",
+        "BlurMaterial"
       ],
       {
         "isExpanded" : true,
@@ -86,8 +87,7 @@
       },
       [
         "C59783A6-9EF6-4E4C-894E-4320171F0DF8",
-        "Root",
-        "BlurMaterial"
+        "Root"
       ],
       {
         "isExpanded" : true,
@@ -99,8 +99,7 @@
     "objectMetadataList" : [
       [
         "CB766F92-EE55-4A63-9401-E7B8C009764D",
-        "Root",
-        "GridMaterial"
+        "Root"
       ],
       {
         "isExpanded" : true,
@@ -108,7 +107,8 @@
       },
       [
         "CB766F92-EE55-4A63-9401-E7B8C009764D",
-        "Root"
+        "Root",
+        "GridMaterial"
       ],
       {
         "isExpanded" : true,
@@ -125,7 +125,9 @@
     "objectMetadataList" : [
       [
         "D66134B1-3681-4A8E-AFE5-29F257229F3B",
-        "Root"
+        "Root",
+        "GridMaterial",
+        "GridMaterial"
       ],
       {
         "isExpanded" : true,
@@ -133,9 +135,7 @@
       },
       [
         "D66134B1-3681-4A8E-AFE5-29F257229F3B",
-        "Root",
-        "GridMaterial",
-        "GridMaterial"
+        "Root"
       ],
       {
         "isExpanded" : true,
@@ -166,7 +166,25 @@
       [
         "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
         "Root",
-        "Shader",
+        "Matrix"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
+        "Root",
+        "Matrix2"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
+        "Root",
+        "Matrix2",
         "text"
       ],
       {
@@ -176,7 +194,8 @@
       [
         "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8",
         "Root",
-        "Matrix"
+        "Shader",
+        "text"
       ],
       {
         "isExpanded" : true,

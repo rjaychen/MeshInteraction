@@ -45,7 +45,8 @@ struct ContentView: View {
                     }
                 }
                 Toggle("Scene Mesh", isOn: $appState.visualizeSceneMeshes).padding()
-                Toggle("Matrix Shader", isOn: $appState.useMatrixShader).padding()
+                Toggle("Matrix Shader", isOn: $appState.useMatrixShader).padding().disabled(appState.useBlurShader)
+                Toggle("Blur Shader", isOn: $appState.useBlurShader).padding().disabled(appState.useMatrixShader)
                 Toggle("Toggle Tap Mesh", isOn: $appState.enableTapMesh).padding()
             } else { /// Inside Immersive Space
                 VStack {

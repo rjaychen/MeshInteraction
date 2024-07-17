@@ -163,7 +163,11 @@ class ViewModel {
             let modelEntity = ModelEntity(mesh: meshResource, materials: [matrixMaterial!])
             return modelEntity
         }
-        else { 
+        else if appState!.useBlurShader {
+            let modelEntity = ModelEntity(mesh: meshResource, materials: [blurMaterial!])
+            return modelEntity
+        }
+        else {
             var material = SimpleMaterial(color: .green.withAlphaComponent(0.8), isMetallic: false)
             material.triangleFillMode = .lines
             let modelEntity = ModelEntity(mesh: meshResource, materials: [material])
@@ -196,7 +200,7 @@ class ViewModel {
     
     /// Creates a mesh object from the mesh anchors based on a bounding radius provided.
     @MainActor
-    func createBoundingEntity(location: SIMD3<Float>){
+    func createBoundingEntity(location: SIMD3<Float>, useBlur: Bool = false){
         location3D = location
         newMeshes.forEach {mesh in mesh.removeFromParent()}
         for (_, anchor) in meshAnchors {
@@ -260,75 +264,24 @@ class ViewModel {
             }
         }
     }
-    
-    @MainActor
-    func textureAllBut(location: SIMD3<Float>) {
-        location3D = location
-        newMeshes.forEach {mesh in mesh.removeFromParent()}
-        for (_, anchor) in meshAnchors {
-            let geometry = anchor.geometry
-            let anchorMatrix = anchor.originFromAnchorTransform
-            var triangleList: [Int] = []
-            let vertices: [SIMD3<Float>] = geometry.vertices.asSIMD3(ofType: Float.self).map {
-                anchorToWorld(anchorMatrix: anchorMatrix, pos: $0)
-            }
-            let normals = geometry.normals.asSIMD3(ofType: Float.self)
-            let tIndices = (0..<geometry.faces.count * 3).map {
-                geometry.faces.buffer.contents()
-                    .advanced(by: $0 * geometry.faces.bytesPerIndex)
-                    .assumingMemoryBound(to: UInt32.self).pointee
-            }
-            for i in stride(from: 0, to: tIndices.count, by: 3) {
-                let indexA = Int(tIndices[i]), indexB = Int(tIndices[i+1]), indexC = Int(tIndices[i+2])
-                let pointA = vertices[indexA]
-                let pointB = vertices[indexB]
-                let pointC = vertices[indexC]
-                let center = (pointA + pointB + pointC) / 3
-                let containsCenter = distance(center, location3D) < appState!.boundingRadius
-                if !containsCenter {
-                    triangleList.append(indexA)
-                    triangleList.append(indexB)
-                    triangleList.append(indexC)
-                }
-            }
-            if !triangleList.isEmpty {
-                var newVertices: [SIMD3<Float>] = []
-                var newNormals: [SIMD3<Float>] = []
-                var newTriangles: [UInt32] = []
-                for i in 0..<triangleList.count {
-                    newVertices.append(vertices[triangleList[i]])
-                    newNormals.append(normals[triangleList[i]])
-                    newTriangles.append(UInt32(i))
-                }
-                var meshDescriptor = MeshDescriptor()
-                meshDescriptor.positions = .init(newVertices)
-                meshDescriptor.primitives = .triangles(newTriangles)
-                meshDescriptor.normals = .init(newNormals)
-                if meshDescriptor.positions.count > 0 {
-                    let meshResource = try! MeshResource.generate(from: [meshDescriptor])
-                    let newMeshEntity = ModelEntity(mesh: meshResource, materials: [blurMaterial!])
-                    newMeshes.append(newMeshEntity)
-                    contentEntity.addChild(newMeshEntity)
-                }
-            }
-        }
-    }
+
     
     @MainActor 
     private func updateImageAnchor(_ anchor: ImageAnchor) {
         /// Create the anchor entity
         if imageAnchors[anchor.id] == nil {
-            textureAllBut(location: anchor.originFromAnchorTransform.position())
-//            let entity = ModelEntity(mesh: .generateSphere(radius: 0.01))
-//            let material = SimpleMaterial(color: .red, isMetallic: false)
-//            entity.model?.materials = [material]
-//            imageAnchors[anchor.id] = entity
-//            contentEntity.addChild(entity)
+            let entity = ModelEntity(mesh: .generateSphere(radius: appState!.boundingRadius))
+            var mat = OcclusionMaterial()
+            mat.faceCulling = .none
+            entity.model?.materials = [mat]
+            imageAnchors[anchor.id] = entity
+            contentEntity.addChild(entity)
         }
 
         /// What to do once the anchor has been found
         if anchor.isTracked {
             imageAnchors[anchor.id]?.transform = Transform(matrix: anchor.originFromAnchorTransform)
+            imageAnchors[anchor.id]?.scale = SIMD3<Float>(repeating: appState!.boundingRadius)
         }
     }
 }
