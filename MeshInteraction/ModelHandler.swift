@@ -10,8 +10,8 @@ import Vision
 
 class ModelHandler: ObservableObject {
     @Published var mask: UIImage?
+    //private var detection_request: VNCoreMLRequest!
     private var segmentation_request: VNCoreMLRequest!
-    private var inpainting_request: VNCoreMLRequest!
     
     lazy var inpainting: LaMa? = {
         do {

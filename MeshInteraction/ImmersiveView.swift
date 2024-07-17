@@ -24,15 +24,22 @@ struct ImmersiveView: View {
         .task() {
             await viewModel.processReconstructionUpdates()
         }
+        .task() {
+            await viewModel.processImageTrackingUpdates()
+        }
         .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
             let location3D = value.convert(value.location3D, from: .local, to: .scene)
             print(location3D)
-            let image = UIImage(named: "dog")
-            Task{
-                if let inpainted = await modelHandler.processImage(image!) {
-                    await viewModel.setMaterialTexture(uiImage: inpainted)
-                    viewModel.createBoundingEntity(location: location3D)
+            if appState.enableTapMesh {
+                let image = UIImage(named: "testCameraFrame2")
+                Task{
+                    if let inpainted = await modelHandler.processImage(image!) {
+                        await viewModel.setMaterialTexture(uiImage: inpainted)
+                        viewModel.createBoundingEntity(location: location3D)
+                    }
                 }
+            } else {
+                viewModel.addCube(tapLocation: location3D)
             }
         })
         .onAppear() {

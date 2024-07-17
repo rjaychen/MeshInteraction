@@ -9,9 +9,10 @@ class ViewModel {
 
     var appState: AppState? = nil
 
-    let handTracking = HandTrackingProvider()
-    let sceneReconstruction = SceneReconstructionProvider()
-    let worldTracking = WorldTrackingProvider()
+    let handTracking = HandTrackingProvider() /// Used to track spatial taps
+    let sceneReconstruction = SceneReconstructionProvider() /// Used to access Scene MeshAnchors
+    let worldTracking = WorldTrackingProvider() /// Used to receive camera transform
+    let imageTracking = ImageTrackingProvider(referenceImages: ReferenceImage.loadReferenceImages(inGroupNamed: "Target"))
     let contentEntity = Entity()
 
     private var meshEntities = [UUID: ModelEntity]()
@@ -26,17 +27,18 @@ class ViewModel {
     private var meshAnchors = [UUID: MeshAnchor]()
     private var newMeshes = [ModelEntity]()
     private var audioFilePath = "/applepay.mp3"
-    private var projectiveMaterial: ShaderGraphMaterial? = nil
+    var projectiveMaterial: ShaderGraphMaterial? = nil
     private var matrixMaterial: ShaderGraphMaterial? = nil
+    private var blurMaterial: ShaderGraphMaterial? = nil
+    private var imageAnchors: [UUID: Entity] = [:]
     
     func loadMaterial() async {
         projectiveMaterial = try! await ShaderGraphMaterial(named: "/Root/ProjectMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
         if projectiveMaterial != nil {
             try! await projectiveMaterial?.setParameter(name: "uiImage", value: .textureResource(TextureResource(named: "checkerboard")))
             print("PTM loaded")
-            //projectiveMaterial?.faceCulling = .back
-        } else {
-            print("PTM loading unsuccessful") }
+        } else { print("PTM loading unsuccessful") }
+        blurMaterial = try! await ShaderGraphMaterial(named: "/Root/BlurMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
         matrixMaterial = try! await ShaderGraphMaterial(named: "/Root/Matrix", from: "MatrixMaterial", in: realityKitContentBundle)
         if matrixMaterial != nil { print("Matrix loaded") } else { print("Matrix failed to load.") }
     }
@@ -57,7 +59,10 @@ class ViewModel {
     }
 
     var isReadyToRun: Bool {
-        handTracking.state == .initialized && sceneReconstruction.state == .initialized
+        handTracking.state == .initialized && 
+        sceneReconstruction.state == .initialized &&
+        worldTracking.state == .initialized &&
+        imageTracking.state == .initialized
     }
 
     // MARK: - ARKit and Anchor handlings
@@ -65,7 +70,7 @@ class ViewModel {
     @MainActor
     func runARKitSession() async {
         do {
-            try await appState!.arkitSession.run([handTracking, sceneReconstruction, worldTracking])
+            try await appState!.arkitSession.run([handTracking, sceneReconstruction, worldTracking, imageTracking])
         } catch {
             return
         }
@@ -114,6 +119,15 @@ class ViewModel {
                 meshEntities.removeValue(forKey: meshAnchor.id)
                 meshAnchors.removeValue(forKey: meshAnchor.id)
             }
+        }
+    }
+    
+    @MainActor
+    func processImageTrackingUpdates() async {
+        //print("[\(type(of: self))] [\(#function)] called")
+        for await update in imageTracking.anchorUpdates {
+            //print("[\(type(of: self))] [\(#function)] anchorUpdates")
+            updateImageAnchor(update.anchor)
         }
     }
 
@@ -184,7 +198,6 @@ class ViewModel {
     @MainActor
     func createBoundingEntity(location: SIMD3<Float>){
         location3D = location
-        //newMeshes.first?.removeFromParent()
         newMeshes.forEach {mesh in mesh.removeFromParent()}
         for (_, anchor) in meshAnchors {
             let geometry = anchor.geometry
@@ -231,7 +244,6 @@ class ViewModel {
                     //var mat = SimpleMaterial(color: .magenta, isMetallic: false)
                     //mat.triangleFillMode = .lines
                     //let newMeshEntity = ModelEntity(mesh: meshResource, materials: [mat])
-                    
                     let newMeshEntity = ModelEntity(mesh: meshResource, materials: [projectiveMaterial!])
                     // MARK: We need to calculate the matrices at runtime and pass them as parameters. This should solve any existing artifact problems. Consider using a LowLevelTexture with a GPU compute kernel. Also look into Sparse Voxel Octrees.
                     Task {
@@ -249,4 +261,75 @@ class ViewModel {
         }
     }
     
+    @MainActor
+    func textureAllBut(location: SIMD3<Float>) {
+        location3D = location
+        newMeshes.forEach {mesh in mesh.removeFromParent()}
+        for (_, anchor) in meshAnchors {
+            let geometry = anchor.geometry
+            let anchorMatrix = anchor.originFromAnchorTransform
+            var triangleList: [Int] = []
+            let vertices: [SIMD3<Float>] = geometry.vertices.asSIMD3(ofType: Float.self).map {
+                anchorToWorld(anchorMatrix: anchorMatrix, pos: $0)
+            }
+            let normals = geometry.normals.asSIMD3(ofType: Float.self)
+            let tIndices = (0..<geometry.faces.count * 3).map {
+                geometry.faces.buffer.contents()
+                    .advanced(by: $0 * geometry.faces.bytesPerIndex)
+                    .assumingMemoryBound(to: UInt32.self).pointee
+            }
+            for i in stride(from: 0, to: tIndices.count, by: 3) {
+                let indexA = Int(tIndices[i]), indexB = Int(tIndices[i+1]), indexC = Int(tIndices[i+2])
+                let pointA = vertices[indexA]
+                let pointB = vertices[indexB]
+                let pointC = vertices[indexC]
+                let center = (pointA + pointB + pointC) / 3
+                let containsCenter = distance(center, location3D) < appState!.boundingRadius
+                if !containsCenter {
+                    triangleList.append(indexA)
+                    triangleList.append(indexB)
+                    triangleList.append(indexC)
+                }
+            }
+            if !triangleList.isEmpty {
+                var newVertices: [SIMD3<Float>] = []
+                var newNormals: [SIMD3<Float>] = []
+                var newTriangles: [UInt32] = []
+                for i in 0..<triangleList.count {
+                    newVertices.append(vertices[triangleList[i]])
+                    newNormals.append(normals[triangleList[i]])
+                    newTriangles.append(UInt32(i))
+                }
+                var meshDescriptor = MeshDescriptor()
+                meshDescriptor.positions = .init(newVertices)
+                meshDescriptor.primitives = .triangles(newTriangles)
+                meshDescriptor.normals = .init(newNormals)
+                if meshDescriptor.positions.count > 0 {
+                    let meshResource = try! MeshResource.generate(from: [meshDescriptor])
+                    let newMeshEntity = ModelEntity(mesh: meshResource, materials: [blurMaterial!])
+                    newMeshes.append(newMeshEntity)
+                    contentEntity.addChild(newMeshEntity)
+                }
+            }
+        }
+    }
+    
+    @MainActor 
+    private func updateImageAnchor(_ anchor: ImageAnchor) {
+        /// Create the anchor entity
+        if imageAnchors[anchor.id] == nil {
+            textureAllBut(location: anchor.originFromAnchorTransform.position())
+//            let entity = ModelEntity(mesh: .generateSphere(radius: 0.01))
+//            let material = SimpleMaterial(color: .red, isMetallic: false)
+//            entity.model?.materials = [material]
+//            imageAnchors[anchor.id] = entity
+//            contentEntity.addChild(entity)
+        }
+
+        /// What to do once the anchor has been found
+        if anchor.isTracked {
+            imageAnchors[anchor.id]?.transform = Transform(matrix: anchor.originFromAnchorTransform)
+        }
+    }
 }
+

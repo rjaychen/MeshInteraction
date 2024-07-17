@@ -8,9 +8,9 @@ struct ContentView: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
     @Environment(\.scenePhase) private var scenePhase
-
+    
     var body: some View {
-        VStack {
+        VStack { /// Outside Immersive Space
             if !appState.isImmersiveSpaceOpened {
                 let openSpace = {
                     switch await openImmersiveSpace(id: "ImmersiveSpace") {
@@ -46,7 +46,8 @@ struct ContentView: View {
                 }
                 Toggle("Scene Mesh", isOn: $appState.visualizeSceneMeshes).padding()
                 Toggle("Matrix Shader", isOn: $appState.useMatrixShader).padding()
-            } else {
+                Toggle("Toggle Tap Mesh", isOn: $appState.enableTapMesh).padding()
+            } else { /// Inside Immersive Space
                 VStack {
                     Spacer()
                     Button {
@@ -62,6 +63,11 @@ struct ContentView: View {
                     Slider(value: $appState.boundingRadius, in: 0.0...1.5)
                     Text("Bounding Radius: \(appState.boundingRadius, specifier: "%.3f")")
                     Spacer()
+                    if let uiImage = UIImage(named: "testCameraFrame") {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                    }
                 }
             }
         }

@@ -10,21 +10,30 @@
 
 def Xform "Root"
 {
+    reorder nameChildren = ["ProjectMaterial", "BlurMaterial"]
     def Material "ProjectMaterial"
     {
         asset inputs:uiImage (
             customData = {
                 dictionary realitykit = {
-                    float2 positionInSubgraph = (-442.6263, 26.299591)
-                    int stackingOrderInSubgraph = 681
+                    float2 positionInSubgraph = (-633.5884, 28.174831)
+                    int stackingOrderInSubgraph = 1172
+                }
+            }
+        )
+        asset inputs:uiImage_1 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-631.305, -192.32997)
+                    int stackingOrderInSubgraph = 1182
                 }
             }
         )
         matrix4d inputs:viewMatrix = ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1) ) (
             customData = {
                 dictionary realitykit = {
-                    float2 positionInSubgraph = (-1164.1244, -2.8522937)
-                    int stackingOrderInSubgraph = 747
+                    float2 positionInSubgraph = (-1225.1348, 99.98893)
+                    int stackingOrderInSubgraph = 1178
                 }
             }
         )
@@ -36,7 +45,7 @@ def Xform "Root"
         def Shader "PreviewSurface"
         {
             uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
-            color3f inputs:diffuseColor.connect = </Root/ProjectMaterial/TiledImage.outputs:out>
+            color3f inputs:diffuseColor.connect = </Root/ProjectMaterial/GeometrySwitchCameraIndex.outputs:out>
             float inputs:metallic
             float3 inputs:normal
             float inputs:opacity
@@ -46,32 +55,14 @@ def Xform "Root"
             int ui:nodegraph:node:stackingOrder = 2
         }
 
-        def Shader "TiledImage"
-        {
-            uniform token info:id = "ND_tiledimage_color3"
-            color3f inputs:default
-            asset inputs:file = @Materials/texture2d/checkerboard.png@
-            asset inputs:file.connect = </Root/ProjectMaterial.inputs:uiImage>
-            string inputs:filtertype = "linear"
-            float2 inputs:realworldimagesize
-            float2 inputs:realworldtilesize
-            float2 inputs:texcoord.connect = </Root/ProjectMaterial/Swizzle.outputs:out>
-            float2 inputs:uvoffset
-            float2 inputs:uvtiling
-            color3f outputs:out
-            float2 ui:nodegraph:node:pos = (-222.70184, 87.38361)
-            int ui:nodegraph:node:stackingOrder = 679
-            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:texcoord"]
-        }
-
         def Shader "TransformMatrix"
         {
             uniform token info:id = "ND_transformmatrix_vector3M4"
             float3 inputs:in.connect = </Root/ProjectMaterial/Position.outputs:out>
-            matrix4d inputs:mat.connect = </Root/ProjectMaterial.inputs:viewMatrix>
+            matrix4d inputs:mat.connect = </Root/ProjectMaterial/SurfaceModelToView.outputs:modelToView>
             float3 outputs:out
             float2 ui:nodegraph:node:pos = (-977.3294, -52.632404)
-            int ui:nodegraph:node:stackingOrder = 734
+            int ui:nodegraph:node:stackingOrder = 1186
         }
 
         def Shader "TransformMatrix_1"
@@ -80,26 +71,26 @@ def Xform "Root"
             prepend float3 inputs:in.connect = </Root/ProjectMaterial/TransformMatrix.outputs:out>
             matrix4d inputs:mat.connect = </Root/ProjectMaterial/SurfaceViewToProjection.outputs:viewToProjection>
             float3 outputs:out
-            float2 ui:nodegraph:node:pos = (-758.83466, -46.817165)
-            int ui:nodegraph:node:stackingOrder = 741
+            float2 ui:nodegraph:node:pos = (-995.42346, 122.05447)
+            int ui:nodegraph:node:stackingOrder = 1059
         }
 
         def Shader "SurfaceViewToProjection"
         {
             uniform token info:id = "ND_realitykit_surface_view_to_projection"
             matrix4d outputs:viewToProjection
-            float2 ui:nodegraph:node:pos = (-968.9795, 49.720257)
-            int ui:nodegraph:node:stackingOrder = 745
+            float2 ui:nodegraph:node:pos = (-1222.2047, 180.13724)
+            int ui:nodegraph:node:stackingOrder = 1057
         }
 
         def Shader "Swizzle"
         {
             uniform token info:id = "ND_swizzle_vector3_vector2"
             string inputs:channels = "xy"
-            float3 inputs:in.connect = </Root/ProjectMaterial/TransformMatrix.outputs:out>
+            float3 inputs:in.connect = </Root/ProjectMaterial/TransformMatrix_1.outputs:out>
             float2 outputs:out
-            float2 ui:nodegraph:node:pos = (-434.09482, 79.491005)
-            int ui:nodegraph:node:stackingOrder = 672
+            float2 ui:nodegraph:node:pos = (-773.4712, 52.181484)
+            int ui:nodegraph:node:stackingOrder = 1185
         }
 
         def Shader "Position"
@@ -109,6 +100,156 @@ def Xform "Root"
             float3 outputs:out
             float2 ui:nodegraph:node:pos = (-1167.7046, -61.85069)
             int ui:nodegraph:node:stackingOrder = 739
+        }
+
+        def Shader "Remap"
+        {
+            uniform token info:id = "ND_remap_vector2"
+            float2 inputs:in.connect = </Root/ProjectMaterial/Swizzle.outputs:out>
+            float2 inputs:inhigh
+            float2 inputs:inlow = (-1, -1)
+            float2 inputs:outhigh
+            float2 inputs:outlow
+            float2 outputs:out
+            float2 ui:nodegraph:node:pos = (-772.152, 182.12675)
+            int ui:nodegraph:node:stackingOrder = 1027
+        }
+
+        def Shader "Add"
+        {
+            uniform token info:id = "ND_add_vector2"
+            float2 inputs:in1.connect = </Root/ProjectMaterial/Remap.outputs:out>
+            float2 inputs:in2 = (0, -1)
+            float2 outputs:out
+            float2 ui:nodegraph:node:pos = (-625.2012, 387.50095)
+            int ui:nodegraph:node:stackingOrder = 1194
+        }
+
+        def Shader "Image"
+        {
+            uniform token info:id = "ND_image_color3"
+            color3f inputs:default
+            prepend asset inputs:file.connect = </Root/ProjectMaterial.inputs:uiImage>
+            string inputs:filtertype
+            float2 inputs:texcoord.connect = </Root/ProjectMaterial/Remap.outputs:out>
+            string inputs:uaddressmode = "clamp"
+            string inputs:vaddressmode = "clamp"
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-470.09363, 78.54884)
+            int ui:nodegraph:node:stackingOrder = 1172
+        }
+
+        def Shader "GeometrySwitchCameraIndex"
+        {
+            uniform token info:id = "ND_realitykit_geometry_switch_cameraindex_color3"
+            color3f inputs:left
+            color3f inputs:mono.connect = </Root/ProjectMaterial/Image.outputs:out>
+            color3f inputs:right
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-249.74461, 79.590065)
+            int ui:nodegraph:node:stackingOrder = 1188
+        }
+
+        def Shader "Image_1"
+        {
+            uniform token info:id = "ND_image_color3"
+            color3f inputs:default
+            asset inputs:file.connect = </Root/ProjectMaterial.inputs:uiImage_1>
+            string inputs:filtertype
+            float2 inputs:texcoord
+            string inputs:uaddressmode = "clamp"
+            string inputs:vaddressmode = "clamp"
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-467.81024, -141.95596)
+            int ui:nodegraph:node:stackingOrder = 1175
+        }
+
+        def Shader "GeometrySwitchCameraIndex_1"
+        {
+            uniform token info:id = "ND_realitykit_geometry_switch_cameraindex_color3"
+            color3f inputs:left
+            color3f inputs:mono.connect = </Root/ProjectMaterial/Image_1.outputs:out>
+            color3f inputs:right
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-259.80453, -112.198135)
+            int ui:nodegraph:node:stackingOrder = 1180
+        }
+
+        def Shader "SurfaceModelToView"
+        {
+            uniform token info:id = "ND_realitykit_surface_model_to_view"
+            matrix4d outputs:modelToView
+            float2 ui:nodegraph:node:pos = (-1247.2123, 10.982004)
+            int ui:nodegraph:node:stackingOrder = 1191
+        }
+    }
+
+    def Material "BlurMaterial"
+    {
+        prepend token outputs:mtlx:surface.connect = </Root/BlurMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (335.25, 100.5)
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor.connect = </Root/BlurMaterial/Add.outputs:out>
+            float inputs:metallic
+            float inputs:opacity
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (93.5, 100.5)
+        }
+
+        def Shader "RealitykitEnvironmentRadiance"
+        {
+            uniform token info:id = "ND_realitykit_environment_radiance"
+            half inputs:metallic
+            float3 inputs:normal.connect = </Root/BlurMaterial/CrossProduct.outputs:out>
+            half inputs:roughness = 0.00250053
+            half inputs:specular
+            color3f outputs:diffuseRadiance
+            color3f outputs:specularRadiance
+            float2 ui:nodegraph:node:pos = (-333.48438, 59.164062)
+            int ui:nodegraph:node:stackingOrder = 23
+        }
+
+        def Shader "Add"
+        {
+            uniform token info:id = "ND_add_color3"
+            color3f inputs:in1.connect = </Root/BlurMaterial/RealitykitEnvironmentRadiance.outputs:diffuseRadiance>
+            color3f inputs:in2.connect = </Root/BlurMaterial/RealitykitEnvironmentRadiance.outputs:specularRadiance>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-105.68359, 153.1289)
+            int ui:nodegraph:node:stackingOrder = 2
+        }
+
+        def Shader "SurfaceViewDirection"
+        {
+            uniform token info:id = "ND_realitykit_surface_view_direction"
+            float3 outputs:viewDirection
+            float2 ui:nodegraph:node:pos = (-680.1992, 111.76953)
+            int ui:nodegraph:node:stackingOrder = 18
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:viewDirection"]
+        }
+
+        def Shader "CrossProduct"
+        {
+            uniform token info:id = "ND_crossproduct_vector3"
+            float3 inputs:in1.connect = </Root/BlurMaterial/SurfaceViewDirection.outputs:viewDirection>
+            float3 inputs:in2.connect = </Root/BlurMaterial/Constant.outputs:out>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-440.64062, 200.26953)
+            int ui:nodegraph:node:stackingOrder = 8
+        }
+
+        def Shader "Constant"
+        {
+            uniform token info:id = "ND_constant_vector3"
+            float3 inputs:value = (0, 1, 0)
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-635.64844, 233.47656)
+            int ui:nodegraph:node:stackingOrder = 20
         }
     }
 }
