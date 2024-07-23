@@ -5,10 +5,25 @@
   },
   "resources" : [
     {
+      "filename" : "blueK.arreferenceimage"
+    },
+    {
+      "filename" : "dogsquare.arreferenceimage"
+    },
+    {
       "filename" : "dukebasketball.arreferenceimage"
     },
     {
+      "filename" : "greenG.arreferenceimage"
+    },
+    {
+      "filename" : "purpleN.arreferenceimage"
+    },
+    {
       "filename" : "trackedImage.arreferenceimage"
+    },
+    {
+      "filename" : "yellowF.arreferenceimage"
     }
   ]
 }

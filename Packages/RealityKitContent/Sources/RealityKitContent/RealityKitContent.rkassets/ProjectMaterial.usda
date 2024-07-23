@@ -21,14 +21,6 @@ def Xform "Root"
                 }
             }
         )
-        asset inputs:uiImage_1 (
-            customData = {
-                dictionary realitykit = {
-                    float2 positionInSubgraph = (-631.305, -192.32997)
-                    int stackingOrderInSubgraph = 1182
-                }
-            }
-        )
         matrix4d inputs:viewMatrix = ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1) ) (
             customData = {
                 dictionary realitykit = {
@@ -121,8 +113,8 @@ def Xform "Root"
             float2 inputs:in1.connect = </Root/ProjectMaterial/Remap.outputs:out>
             float2 inputs:in2 = (0, -1)
             float2 outputs:out
-            float2 ui:nodegraph:node:pos = (-625.2012, 387.50095)
-            int ui:nodegraph:node:stackingOrder = 1194
+            float2 ui:nodegraph:node:pos = (-586.7091, 270.18286)
+            int ui:nodegraph:node:stackingOrder = 1196
         }
 
         def Shader "Image"
@@ -148,31 +140,6 @@ def Xform "Root"
             color3f outputs:out
             float2 ui:nodegraph:node:pos = (-249.74461, 79.590065)
             int ui:nodegraph:node:stackingOrder = 1188
-        }
-
-        def Shader "Image_1"
-        {
-            uniform token info:id = "ND_image_color3"
-            color3f inputs:default
-            asset inputs:file.connect = </Root/ProjectMaterial.inputs:uiImage_1>
-            string inputs:filtertype
-            float2 inputs:texcoord
-            string inputs:uaddressmode = "clamp"
-            string inputs:vaddressmode = "clamp"
-            color3f outputs:out
-            float2 ui:nodegraph:node:pos = (-467.81024, -141.95596)
-            int ui:nodegraph:node:stackingOrder = 1175
-        }
-
-        def Shader "GeometrySwitchCameraIndex_1"
-        {
-            uniform token info:id = "ND_realitykit_geometry_switch_cameraindex_color3"
-            color3f inputs:left
-            color3f inputs:mono.connect = </Root/ProjectMaterial/Image_1.outputs:out>
-            color3f inputs:right
-            color3f outputs:out
-            float2 ui:nodegraph:node:pos = (-259.80453, -112.198135)
-            int ui:nodegraph:node:stackingOrder = 1180
         }
 
         def Shader "SurfaceModelToView"

@@ -3,13 +3,20 @@
   "openSceneRelativePaths" : [
     "Immersive.usda",
     "MatrixMaterial.usda",
-    "ProjectMaterial.usda"
+    "ProjectMaterial.usda",
+    "TableMaterial.usda"
   ],
   "recentIdentifiers" : {
+    "7A532036-9708-4042-80D7-574826358A60" : [
+
+    ],
     "C59783A6-9EF6-4E4C-894E-4320171F0DF8" : [
 
     ],
     "DF4E0E9C-F033-42A0-9DF5-6E964AC222E8" : [
+
+    ],
+    "FC2E7736-05FE-47ED-926C-403B0D1CDDED" : [
 
     ]
   },
@@ -39,6 +46,28 @@
       }
     ],
     "C59783A6-9EF6-4E4C-894E-4320171F0DF8" : [
+      {
+        "date" : 743370896.400603,
+        "title" : "Untitled",
+        "transform" : [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.7071069,
+          -0.7071067,
+          0,
+          0,
+          0.7071067,
+          0.7071069,
+          0,
+          -1.1870262e-07,
+          0.12165262,
+          0.12165262,
+          1
+        ]
+      },
       {
         "date" : 741561278.890239,
         "title" : "Untitled",
@@ -107,7 +136,53 @@
           1
         ]
       }
+    ],
+    "FC2E7736-05FE-47ED-926C-403B0D1CDDED" : [
+      {
+        "date" : 743371383.034884,
+        "title" : "Untitled",
+        "transform" : [
+          1,
+          0,
+          -0,
+          0,
+          -0,
+          0.7071069,
+          -0.7071067,
+          0,
+          0,
+          0.7071067,
+          0.7071069,
+          0,
+          -1.1920929e-07,
+          0.1299206,
+          0.12992048,
+          1
+        ]
+      },
+      {
+        "date" : 743371381.307206,
+        "title" : "Untitled",
+        "transform" : [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.7071069,
+          -0.70710677,
+          0,
+          0,
+          0.70710677,
+          0.7071069,
+          0,
+          -0.48516476,
+          1.7144336,
+          1.9431474,
+          1
+        ]
+      }
     ]
   },
-  "selectedSceneRelativePath" : "ProjectMaterial.usda"
+  "selectedSceneRelativePath" : "TableMaterial.usda"
 }

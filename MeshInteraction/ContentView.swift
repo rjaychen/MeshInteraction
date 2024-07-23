@@ -24,6 +24,18 @@ struct ContentView: View {
                         break
                     }
                 }
+                let imageTracking = {
+                    switch await openImmersiveSpace(id: "ImageTracking") {
+                    case .opened:
+                        break
+                    case .error:
+                        print("An error occurred when trying to open the immersive space \("ImmersiveSpace")")
+                    case .userCancelled:
+                        print("The user declined opening immersive space \("ImmersiveSpace")")
+                    @unknown default:
+                        break
+                    }
+                }
                 Section("Select A Viewing Style") {
                     Button("Mixed View") {
                         Task {
@@ -41,6 +53,12 @@ struct ContentView: View {
                         Task {
                             appState.currentStyle = .full
                             await openSpace()
+                        }
+                    }
+                    Button("Image Tracking") {
+                        Task {
+                            appState.currentStyle = .mixed
+                            await imageTracking()
                         }
                     }
                 }

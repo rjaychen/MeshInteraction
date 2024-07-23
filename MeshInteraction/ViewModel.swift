@@ -22,14 +22,17 @@ class ViewModel {
     ]
     
     /// Variables I added
-    private var boundingBox: BoundingBox? = nil
+    private var boundingBox: Entity? = nil
+    private var topLeftBackVert: SIMD3<Float> = [0, 0, 0]
+    private var bottomRightFrontVert: SIMD3<Float> = [0, 0, 0]
     private var location3D: SIMD3<Float> = [0, 0, 0]
     private var meshAnchors = [UUID: MeshAnchor]()
     private var newMeshes = [ModelEntity]()
     private var audioFilePath = "/applepay.mp3"
-    var projectiveMaterial: ShaderGraphMaterial? = nil
+    private var projectiveMaterial: ShaderGraphMaterial? = nil
     private var matrixMaterial: ShaderGraphMaterial? = nil
     private var blurMaterial: ShaderGraphMaterial? = nil
+    private var tableMaterial: ShaderGraphMaterial? = nil
     private var imageAnchors: [UUID: Entity] = [:]
     
     func loadMaterial() async {
@@ -41,6 +44,7 @@ class ViewModel {
         blurMaterial = try! await ShaderGraphMaterial(named: "/Root/BlurMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
         matrixMaterial = try! await ShaderGraphMaterial(named: "/Root/Matrix", from: "MatrixMaterial", in: realityKitContentBundle)
         if matrixMaterial != nil { print("Matrix loaded") } else { print("Matrix failed to load.") }
+        tableMaterial = try! await ShaderGraphMaterial(named: "/Root/TableMaterial", from: "TableMaterial", in: realityKitContentBundle)
     }
     
     func setMaterialTexture(uiImage: UIImage) async {
@@ -131,11 +135,12 @@ class ViewModel {
         }
     }
 
+    /// Uses World Tracking to return the device anchor transform
     func getDeviceTransform() async -> simd_float4x4 {
         guard let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
             else { return .init() }
             return deviceAnchor.originFromAnchorTransform
-        }
+    }
     
     @MainActor
     func generateModelEntity(geometry: MeshAnchor.Geometry) async throws -> ModelEntity {
@@ -270,19 +275,66 @@ class ViewModel {
     private func updateImageAnchor(_ anchor: ImageAnchor) {
         /// Create the anchor entity
         if imageAnchors[anchor.id] == nil {
-            let entity = ModelEntity(mesh: .generateSphere(radius: appState!.boundingRadius))
-            var mat = OcclusionMaterial()
-            mat.faceCulling = .none
-            entity.model?.materials = [mat]
+            
+//            let entity = ModelEntity(mesh: .generateSphere(radius: appState!.boundingRadius))
+//            var mat = OcclusionMaterial()
+//            mat.faceCulling = .none
+            let w = Float(anchor.referenceImage.physicalSize.width) * anchor.estimatedScaleFactor
+            let h = Float(anchor.referenceImage.physicalSize.height) * anchor.estimatedScaleFactor
+            let entity = ModelEntity(mesh: MeshResource.generateBox(width: w+0.01, height: h+0.01, depth: 0.001)) // change depth to 1 with cubes
+            //let mat = SimpleMaterial(color: .red, isMetallic: false)
+            entity.model?.materials = [tableMaterial!]
             imageAnchors[anchor.id] = entity
             contentEntity.addChild(entity)
         }
-
+        
+        /// Example of creating bounding box based on 2 images
+//        if anchor.referenceImage.name == "dukebasketball" {
+//            topLeftBackVert = anchor.originFromAnchorTransform.position()
+//        } else if anchor.referenceImage.name == "dogsquare" {
+//            bottomRightFrontVert = anchor.originFromAnchorTransform.position()
+//        }
+//        let bothFound = topLeftBackVert != [0.0, 0.0, 0.0] && bottomRightFrontVert != [0.0, 0.0, 0.0]
+//        if bothFound {
+//            print("clearing workspace")
+//            let diff = bottomRightFrontVert - topLeftBackVert
+//            let boxCenter = topLeftBackVert + diff / 2
+//            let width = abs(diff.x), height = abs(diff.y), depth = abs(diff.z)
+//            let boxMesh = MeshResource.generateBox(width: width, height: height, depth: depth)
+//            let boxEntity = ModelEntity(mesh: boxMesh, materials: [OcclusionMaterial()])
+//            boundingBox = boxEntity
+//            boundingBox?.transform.translation = boxCenter
+//            boundingBox?.look(at: bottomRightFrontVert, from: [0.0, 0.0, 0.0], relativeTo: nil)
+//            contentEntity.addChild(boundingBox!)
+//        }
+        
         /// What to do once the anchor has been found
         if anchor.isTracked {
+//            if anchor.referenceImage.name == "dukebasketball" {
+//                topLeftBackVert = anchor.originFromAnchorTransform.position()
+//                let boxCenter = bottomRightFrontVert + (topLeftBackVert - bottomRightFrontVert) / 2
+//                boundingBox?.transform.translation = boxCenter
+//            }
+//            else if anchor.referenceImage.name == "dogsquare" {
+//                bottomRightFrontVert = anchor.originFromAnchorTransform.position()
+//                let boxCenter = bottomRightFrontVert + (topLeftBackVert - bottomRightFrontVert) / 2
+//                boundingBox?.transform.translation = boxCenter
+//            }
             imageAnchors[anchor.id]?.transform = Transform(matrix: anchor.originFromAnchorTransform)
-            imageAnchors[anchor.id]?.scale = SIMD3<Float>(repeating: appState!.boundingRadius)
+            imageAnchors[anchor.id]?.transform = Transform(matrix: anchor.originFromAnchorTransform * makeXRotationMatrix(angle: -.pi/2))
+//            imageAnchors[anchor.id]?.scale = SIMD3<Float>(repeating: appState!.boundingRadius) // for bounding occlusion sphere
         }
     }
+    func makeXRotationMatrix(angle: Float) -> simd_float4x4 {
+        let rows = [
+            simd_float4(1,          0,           0, 0),
+            simd_float4(0, cos(angle), -sin(angle), 0),
+            simd_float4(0, sin(angle),  cos(angle), 0),
+            simd_float4(0,          0,           0, 1)
+        ]
+        return float4x4(rows: rows)
+    }
 }
+
+
 

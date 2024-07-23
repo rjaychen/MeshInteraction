@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "blueK.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "width" : 0.037335526315789472
+  }
+}

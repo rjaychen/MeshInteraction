@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3211789F2C29F7F80075DD73 /* applepay.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3211789E2C29F7F80075DD73 /* applepay.mp3 */; };
+		32317EAE2C5031F000A3D1DA /* ImageTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32317EAD2C5031EB00A3D1DA /* ImageTrackingView.swift */; };
 		323319CA2C2DC9F800CCEC62 /* RealityKitContent in Resources */ = {isa = PBXBuildFile; fileRef = 323319C82C2DC9F800CCEC62 /* RealityKitContent */; };
 		323319CD2C2DCA8000CCEC62 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 323319CC2C2DCA8000CCEC62 /* RealityKitContent */; };
 		3274A48C2C235CAA000ED7B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3274A48B2C235CAA000ED7B3 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		3211789E2C29F7F80075DD73 /* applepay.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = applepay.mp3; sourceTree = "<group>"; };
+		32317EAD2C5031EB00A3D1DA /* ImageTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTrackingView.swift; sourceTree = "<group>"; };
 		323319C82C2DC9F800CCEC62 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		3274A47A2C235CA9000ED7B3 /* MeshInteraction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeshInteraction.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3274A48B2C235CAA000ED7B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				3274A4A82C23662E000ED7B3 /* AppState.swift */,
 				3274A4A92C23662E000ED7B3 /* ContentView.swift */,
 				3274A4AA2C23662E000ED7B3 /* ImmersiveView.swift */,
+				32317EAD2C5031EB00A3D1DA /* ImageTrackingView.swift */,
 				3274A4AB2C23662E000ED7B3 /* ViewModel.swift */,
 				3299873D2C3D8A4300CD701D /* ModelHandler.swift */,
 				32801E1E2C25DA7D000D8910 /* Extensions.swift */,
@@ -241,6 +244,7 @@
 				3299873E2C3D8A4900CD701D /* ModelHandler.swift in Sources */,
 				3274A4AC2C23662E000ED7B3 /* ImmersiveView.swift in Sources */,
 				329987422C3D8B4900CD701D /* u2netp.mlmodel in Sources */,
+				32317EAE2C5031F000A3D1DA /* ImageTrackingView.swift in Sources */,
 				329987402C3D8B4300CD701D /* LaMa.mlpackage in Sources */,
 				32801E1F2C25DA7F000D8910 /* Extensions.swift in Sources */,
 				3274A4AD2C23662E000ED7B3 /* ViewModel.swift in Sources */,

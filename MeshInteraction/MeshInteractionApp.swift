@@ -22,6 +22,11 @@ struct MeshInteractionApp: App {
                 appState: appState
             )
         }
+        ImmersiveSpace(id: "ImageTracking") {
+            ImageTrackingView (
+                appState: appState
+            )
+        }
         .onChange(of: scenePhase, initial: true) {
             if scenePhase != .active {
                 if appState.isImmersiveSpaceOpened {

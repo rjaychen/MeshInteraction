@@ -24,14 +24,14 @@ struct ImmersiveView: View {
         .task() {
             await viewModel.processReconstructionUpdates()
         }
-        .task() {
-            await viewModel.processImageTrackingUpdates()
-        }
+//        .task() {
+//            await viewModel.processImageTrackingUpdates()
+//        }
         .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
             let location3D = value.convert(value.location3D, from: .local, to: .scene)
             print(location3D)
             if appState.enableTapMesh {
-                let image = UIImage(named: "testCameraFrame2")
+                let image = UIImage(named: "dog")
                 Task{
                     if let inpainted = await modelHandler.processImage(image!) {
                         await viewModel.setMaterialTexture(uiImage: inpainted)
