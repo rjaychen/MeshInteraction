@@ -31,11 +31,12 @@ struct ImmersiveView: View {
             let location3D = value.convert(value.location3D, from: .local, to: .scene)
             print(location3D)
             if appState.enableTapMesh {
-                let image = UIImage(named: "dog")
+                let image = UIImage(named: "cameraframe")
                 Task{
                     if let inpainted = await modelHandler.processImage(image!) {
-                        await viewModel.setMaterialTexture(uiImage: inpainted)
-                        viewModel.createBoundingEntity(location: location3D)
+                        viewModel.createPortal(location: location3D, frame: inpainted)
+                        //await viewModel.setMaterialTexture(uiImage: inpainted)
+                        //viewModel.createBoundingEntity(location: location3D)
                     }
                 }
             } else {

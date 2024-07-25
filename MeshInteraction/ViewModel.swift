@@ -270,56 +270,67 @@ class ViewModel {
         }
     }
 
+    func loadTextureAndApplyToMaterial(frame: UIImage?) -> PhysicallyBasedMaterial? {
+        guard let image = frame else {
+            print("Failed to load image")
+            return nil
+        }
+        guard let cgImage = image.cgImage else {
+            print("Failed to get CGImage")
+            return nil
+        }
+        let textureResource = try? TextureResource.init(image: cgImage, options: .init(semantic: .color))
+        var material = PhysicallyBasedMaterial()
+        material.baseColor = PhysicallyBasedMaterial.BaseColor(texture: PhysicallyBasedMaterial.Texture(textureResource!))
+        material.blending = .transparent(opacity: .init(floatLiteral:0.8))
+        return material
+    }
+    
+    @MainActor
+    func createPortal(location: SIMD3<Float>, frame: UIImage) {
+        let depthToPlace = abs(location.z) + 1.0
+        let scale = 0.9 * depthToPlace
+        
+        let world = Entity()
+        world.components.set(WorldComponent())
+        
+        let target = AnchoringComponent.Target.head
+        let anchoringComponent = AnchoringComponent(target, trackingMode: .once)
+        let head = Entity()
+        head.components.set(anchoringComponent)
+        world.addChild(head)
+
+        if let material = loadTextureAndApplyToMaterial(frame: frame) {
+            let plane = ModelEntity(mesh: MeshResource.generatePlane(width: 1.92 * scale, height: 1.08 * scale), materials: [material])
+            plane.transform.translation = [0, 0, -depthToPlace]
+            head.addChild(plane)
+        }
+        
+        let portal = ModelEntity(mesh: MeshResource.generateSphere(radius: 0.5), materials: [PortalMaterial()])
+        let portalComponent = PortalComponent(target: world)
+        portal.components.set(portalComponent)
+        portal.transform.translation = location
+        
+        contentEntity.addChild(world)
+        contentEntity.addChild(portal)
+    }
+    
     
     @MainActor 
     private func updateImageAnchor(_ anchor: ImageAnchor) {
         /// Create the anchor entity
         if imageAnchors[anchor.id] == nil {
-            
-//            let entity = ModelEntity(mesh: .generateSphere(radius: appState!.boundingRadius))
-//            var mat = OcclusionMaterial()
-//            mat.faceCulling = .none
             let w = Float(anchor.referenceImage.physicalSize.width) * anchor.estimatedScaleFactor
             let h = Float(anchor.referenceImage.physicalSize.height) * anchor.estimatedScaleFactor
-            let entity = ModelEntity(mesh: MeshResource.generateBox(width: w+0.01, height: h+0.01, depth: 0.001)) // change depth to 1 with cubes
-            //let mat = SimpleMaterial(color: .red, isMetallic: false)
+            let entity = ModelEntity(mesh: MeshResource.generateBox(width: w+0.01, height: h+0.01, depth: 0.001))
             entity.model?.materials = [tableMaterial!]
             imageAnchors[anchor.id] = entity
             contentEntity.addChild(entity)
         }
         
-        /// Example of creating bounding box based on 2 images
-//        if anchor.referenceImage.name == "dukebasketball" {
-//            topLeftBackVert = anchor.originFromAnchorTransform.position()
-//        } else if anchor.referenceImage.name == "dogsquare" {
-//            bottomRightFrontVert = anchor.originFromAnchorTransform.position()
-//        }
-//        let bothFound = topLeftBackVert != [0.0, 0.0, 0.0] && bottomRightFrontVert != [0.0, 0.0, 0.0]
-//        if bothFound {
-//            print("clearing workspace")
-//            let diff = bottomRightFrontVert - topLeftBackVert
-//            let boxCenter = topLeftBackVert + diff / 2
-//            let width = abs(diff.x), height = abs(diff.y), depth = abs(diff.z)
-//            let boxMesh = MeshResource.generateBox(width: width, height: height, depth: depth)
-//            let boxEntity = ModelEntity(mesh: boxMesh, materials: [OcclusionMaterial()])
-//            boundingBox = boxEntity
-//            boundingBox?.transform.translation = boxCenter
-//            boundingBox?.look(at: bottomRightFrontVert, from: [0.0, 0.0, 0.0], relativeTo: nil)
-//            contentEntity.addChild(boundingBox!)
-//        }
         
         /// What to do once the anchor has been found
         if anchor.isTracked {
-//            if anchor.referenceImage.name == "dukebasketball" {
-//                topLeftBackVert = anchor.originFromAnchorTransform.position()
-//                let boxCenter = bottomRightFrontVert + (topLeftBackVert - bottomRightFrontVert) / 2
-//                boundingBox?.transform.translation = boxCenter
-//            }
-//            else if anchor.referenceImage.name == "dogsquare" {
-//                bottomRightFrontVert = anchor.originFromAnchorTransform.position()
-//                let boxCenter = bottomRightFrontVert + (topLeftBackVert - bottomRightFrontVert) / 2
-//                boundingBox?.transform.translation = boxCenter
-//            }
             imageAnchors[anchor.id]?.transform = Transform(matrix: anchor.originFromAnchorTransform)
             imageAnchors[anchor.id]?.transform = Transform(matrix: anchor.originFromAnchorTransform * makeXRotationMatrix(angle: -.pi/2))
 //            imageAnchors[anchor.id]?.scale = SIMD3<Float>(repeating: appState!.boundingRadius) // for bounding occlusion sphere
