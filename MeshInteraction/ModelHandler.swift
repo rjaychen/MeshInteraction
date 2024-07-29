@@ -9,9 +9,12 @@ import SwiftUI
 import Vision
 
 class ModelHandler: ObservableObject {
-    @Published var mask: UIImage?
     //private var detection_request: VNCoreMLRequest!
     private var segmentation_request: VNCoreMLRequest!
+    
+    @State private var segmentAnything: SegmentAnything
+    @State private var textureLoader: TextureLoader
+    @State private var maskProcessor: MaskProcessor
     
     lazy var inpainting: LaMa? = {
         do {
@@ -26,43 +29,30 @@ class ModelHandler: ObservableObject {
     }()
     
     init() {
-        setupModel()
-    }
-
-    private func setupModel() {
-        guard let segmentation = try? VNCoreMLModel(for: u2netp().model) else {fatalError("can't load segmentation model.")}
-        self.segmentation_request = VNCoreMLRequest(model: segmentation, completionHandler: { [weak self] request, error in
-            guard let results = request.results, let firstResult = results.first as? VNPixelBufferObservation else {
-                return
-            }
-        
-            let ciImage = CIImage(cvPixelBuffer: firstResult.pixelBuffer)
-            let context = CIContext()
-            guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }
-            DispatchQueue.main.async {
-                self?.mask = UIImage(cgImage: cgImage)
-            }
-        })
+        let device = MTLCreateSystemDefaultDevice()!
+        self.segmentAnything = SegmentAnything(device: device)
+        self.textureLoader = TextureLoader(device: device)
+        self.maskProcessor = MaskProcessor(device: device)
+        self.segmentAnything.load()
+        self.maskProcessor.load()
     }
 
     func processImage(_ uiImage: UIImage) async -> UIImage? {
-        guard let ciImage = CIImage(image: uiImage) else {
-            fatalError()
-        }
-        let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+        let imageTexture = try! await self.textureLoader.loadTexture(uiImage: uiImage)
+        self.segmentAnything.preprocess(image: imageTexture)
+        let masks = self.segmentAnything.predictMask(points: [Point(x: Float(1005), y: Float(867), label: 1)])
+        let maskRaw = self.textureLoader.unloadTexture(texture: masks.first!)
+        let mask = self.textureLoader.convertMask(uiImage: maskRaw)
         return await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
-                    try handler.perform([self.segmentation_request])
                     Task{
-                        if let resultImage = await self.inpaint_with_lama(inputImage: uiImage, mask: self.mask!) {
+                        if let resultImage = await self.inpaint_with_lama(inputImage: uiImage, mask: mask) {
                             continuation.resume(returning: resultImage)
                         } else {
                             continuation.resume(returning: nil)
                         }
                     }
-                } catch {
-                    fatalError()
                 }
             }
         }

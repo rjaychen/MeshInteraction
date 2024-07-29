@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 struct MeshInteractionApp: App {
     // MARK: Must Add NSWorldSensingUsageDescription to App Keys
+    // MARK: Ensure C header files are updated in app configuration
     @State private var appState = AppState()
 
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
@@ -26,6 +27,9 @@ struct MeshInteractionApp: App {
             ImageTrackingView (
                 appState: appState
             )
+        }
+        ImmersiveSpace(id: "Train Assembly") {
+            TrainAssembly(appState: appState)
         }
         .onChange(of: scenePhase, initial: true) {
             if scenePhase != .active {

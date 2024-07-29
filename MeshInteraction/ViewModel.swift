@@ -1,7 +1,8 @@
 import ARKit
 import SwiftUI
-import RealityKit
 import Accelerate
+import AVFoundation
+import RealityKit
 import RealityKitContent
 
 @Observable
@@ -59,7 +60,7 @@ class ViewModel {
     }
 
     var dataProvidersAreSupported: Bool {
-        HandTrackingProvider.isSupported && SceneReconstructionProvider.isSupported
+        HandTrackingProvider.isSupported && SceneReconstructionProvider.isSupported && ImageTrackingProvider.isSupported && WorldTrackingProvider.isSupported
     }
 
     var isReadyToRun: Bool {
@@ -133,13 +134,6 @@ class ViewModel {
             //print("[\(type(of: self))] [\(#function)] anchorUpdates")
             updateImageAnchor(update.anchor)
         }
-    }
-
-    /// Uses World Tracking to return the device anchor transform
-    func getDeviceTransform() async -> simd_float4x4 {
-        guard let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
-            else { return .init() }
-            return deviceAnchor.originFromAnchorTransform
     }
     
     @MainActor
@@ -315,6 +309,24 @@ class ViewModel {
         contentEntity.addChild(portal)
     }
     
+    @MainActor
+    func testImage(location: SIMD3<Float>, frame: UIImage) {
+        let depthToPlace = abs(location.z) + 1.0
+        let scale = 0.9 * depthToPlace
+        
+        let target = AnchoringComponent.Target.head
+        let anchoringComponent = AnchoringComponent(target, trackingMode: .predicted)
+        let head = Entity()
+        head.components.set(anchoringComponent)
+        contentEntity.addChild(head)
+
+        if let material = loadTextureAndApplyToMaterial(frame: frame) {
+            let plane = ModelEntity(mesh: MeshResource.generatePlane(width: 1.92 * scale, height: 1.08 * scale), materials: [material])
+            plane.transform.translation = [0, 0, -depthToPlace]
+            head.addChild(plane)
+        }
+    }
+    
     
     @MainActor 
     private func updateImageAnchor(_ anchor: ImageAnchor) {
@@ -336,6 +348,15 @@ class ViewModel {
 //            imageAnchors[anchor.id]?.scale = SIMD3<Float>(repeating: appState!.boundingRadius) // for bounding occlusion sphere
         }
     }
+    
+    // Utilities --------------------------------------------
+    /// Uses World Tracking to return the device anchor transform
+    func getDeviceTransform() async -> simd_float4x4 {
+        guard let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+            else { return .init() }
+            return deviceAnchor.originFromAnchorTransform
+    }
+    
     func makeXRotationMatrix(angle: Float) -> simd_float4x4 {
         let rows = [
             simd_float4(1,          0,           0, 0),

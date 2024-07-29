@@ -29,11 +29,13 @@ struct ImmersiveView: View {
 //        }
         .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
             let location3D = value.convert(value.location3D, from: .local, to: .scene)
+            print(value.location)
             print(location3D)
             if appState.enableTapMesh {
-                let image = UIImage(named: "cameraframe")
+                let image = UIImage(named: "blocks")
                 Task{
                     if let inpainted = await modelHandler.processImage(image!) {
+                        //viewModel.testImage(location: location3D, frame: inpainted)
                         viewModel.createPortal(location: location3D, frame: inpainted)
                         //await viewModel.setMaterialTexture(uiImage: inpainted)
                         //viewModel.createBoundingEntity(location: location3D)
