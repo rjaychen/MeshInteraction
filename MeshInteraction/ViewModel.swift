@@ -1,7 +1,6 @@
 import ARKit
 import SwiftUI
 import Accelerate
-import AVFoundation
 import RealityKit
 import RealityKitContent
 
