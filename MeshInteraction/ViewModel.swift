@@ -11,6 +11,7 @@ class ViewModel {
 
     let handTracking = HandTrackingProvider()
     let sceneReconstruction = SceneReconstructionProvider()
+    let worldTracking = WorldTrackingProvider() // MARK: Needed for head tracking
     let contentEntity = Entity()
 
     private var meshEntities = [UUID: ModelEntity]()
@@ -34,11 +35,11 @@ class ViewModel {
     }
 
     var dataProvidersAreSupported: Bool {
-        HandTrackingProvider.isSupported && SceneReconstructionProvider.isSupported
+        HandTrackingProvider.isSupported && SceneReconstructionProvider.isSupported && WorldTrackingProvider.isSupported
     }
 
     var isReadyToRun: Bool {
-        handTracking.state == .initialized && sceneReconstruction.state == .initialized
+        handTracking.state == .initialized && sceneReconstruction.state == .initialized && worldTracking.state == .initialized
     }
 
     // MARK: - ARKit and Anchor handlings
@@ -46,12 +47,12 @@ class ViewModel {
     @MainActor
     func runARKitSession() async {
         do {
-            try await appState!.arkitSession.run([handTracking, sceneReconstruction])
+            try await appState!.arkitSession.run([handTracking, sceneReconstruction, worldTracking])
         } catch {
             return
         }
     }
-
+    
     @MainActor
     /// Updates hand information from ARKit.
     func processHandUpdates() async {
@@ -95,6 +96,14 @@ class ViewModel {
                 meshEntities.removeValue(forKey: meshAnchor.id)
                 meshAnchors.removeValue(forKey: meshAnchor.id)
             }
+        }
+    }
+    
+    @MainActor
+    func processWorldTrackingUpdates() async {
+        for await _ in worldTracking.anchorUpdates {
+            let headTransform = await transformMatrix()
+            print(headTransform)
         }
     }
 
@@ -214,6 +223,12 @@ class ViewModel {
                 }
             }
         }
+    }
+    
+    func transformMatrix() async -> simd_float4x4 {
+            guard let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: .zero)
+            else { return .init() }
+            return deviceAnchor.originFromAnchorTransform
     }
     
 }
