@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3211789F2C29F7F80075DD73 /* applepay.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3211789E2C29F7F80075DD73 /* applepay.mp3 */; };
+		3214FB222CB2D769002FE251 /* LaMa.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 3214FB212CB2D769002FE251 /* LaMa.mlpackage */; };
+		3214FB282CB2D85B002FE251 /* edge_sam_3x_decoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 3214FB252CB2D7FB002FE251 /* edge_sam_3x_decoder.mlpackage */; };
+		3214FB292CB2D85B002FE251 /* edge_sam_3x_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 3214FB262CB2D7FB002FE251 /* edge_sam_3x_encoder.mlpackage */; };
 		32317EAE2C5031F000A3D1DA /* ImageTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32317EAD2C5031EB00A3D1DA /* ImageTrackingView.swift */; };
 		323319CA2C2DC9F800CCEC62 /* RealityKitContent in Resources */ = {isa = PBXBuildFile; fileRef = 323319C82C2DC9F800CCEC62 /* RealityKitContent */; };
 		323319CD2C2DCA8000CCEC62 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 323319CC2C2DCA8000CCEC62 /* RealityKitContent */; };
@@ -16,10 +19,7 @@
 		326E954B2C57FF4100957BCC /* SegmentAnything.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326E95472C57FF4100957BCC /* SegmentAnything.swift */; };
 		326E954C2C57FF4100957BCC /* MaskProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326E95422C57FF4100957BCC /* MaskProcessor.swift */; };
 		326E954D2C57FF4100957BCC /* mask.metal in Sources */ = {isa = PBXBuildFile; fileRef = 326E95412C57FF4100957BCC /* mask.metal */; };
-		326E954F2C57FF5200957BCC /* edge_sam_3x_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 326E954E2C57FF5200957BCC /* edge_sam_3x_encoder.mlpackage */; };
-		326E95512C57FF6000957BCC /* edge_sam_3x_decoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 326E95502C57FF6000957BCC /* edge_sam_3x_decoder.mlpackage */; };
 		326E95542C58009300957BCC /* TextureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326E95532C58009300957BCC /* TextureLoader.swift */; };
-		326E95562C5835C700957BCC /* TrainAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326E95552C5835BC00957BCC /* TrainAssembly.swift */; };
 		3274A48C2C235CAA000ED7B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3274A48B2C235CAA000ED7B3 /* Assets.xcassets */; };
 		3274A48F2C235CAA000ED7B3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3274A48E2C235CAA000ED7B3 /* Preview Assets.xcassets */; };
 		3274A4AC2C23662E000ED7B3 /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3274A4AA2C23662E000ED7B3 /* ImmersiveView.swift */; };
@@ -29,7 +29,6 @@
 		3274A4B02C23662E000ED7B3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3274A4A92C23662E000ED7B3 /* ContentView.swift */; };
 		32801E1F2C25DA7F000D8910 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32801E1E2C25DA7D000D8910 /* Extensions.swift */; };
 		3299873E2C3D8A4900CD701D /* ModelHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299873D2C3D8A4300CD701D /* ModelHandler.swift */; };
-		329987402C3D8B4300CD701D /* LaMa.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 3299873F2C3D8B4300CD701D /* LaMa.mlpackage */; };
 		329987422C3D8B4900CD701D /* u2netp.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 329987412C3D8B4900CD701D /* u2netp.mlmodel */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +44,9 @@
 
 /* Begin PBXFileReference section */
 		3211789E2C29F7F80075DD73 /* applepay.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = applepay.mp3; sourceTree = "<group>"; };
+		3214FB212CB2D769002FE251 /* LaMa.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = LaMa.mlpackage; sourceTree = "<group>"; };
+		3214FB252CB2D7FB002FE251 /* edge_sam_3x_decoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = edge_sam_3x_decoder.mlpackage; sourceTree = "<group>"; };
+		3214FB262CB2D7FB002FE251 /* edge_sam_3x_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = edge_sam_3x_encoder.mlpackage; sourceTree = "<group>"; };
 		32317EAD2C5031EB00A3D1DA /* ImageTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTrackingView.swift; sourceTree = "<group>"; };
 		323319C82C2DC9F800CCEC62 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		326E95412C57FF4100957BCC /* mask.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = mask.metal; sourceTree = "<group>"; };
@@ -54,10 +56,7 @@
 		326E95452C57FF4100957BCC /* ImageProcessingFuncs.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ImageProcessingFuncs.metal; sourceTree = "<group>"; };
 		326E95462C57FF4100957BCC /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
 		326E95472C57FF4100957BCC /* SegmentAnything.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentAnything.swift; sourceTree = "<group>"; };
-		326E954E2C57FF5200957BCC /* edge_sam_3x_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = edge_sam_3x_encoder.mlpackage; sourceTree = "<group>"; };
-		326E95502C57FF6000957BCC /* edge_sam_3x_decoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = edge_sam_3x_decoder.mlpackage; sourceTree = "<group>"; };
 		326E95532C58009300957BCC /* TextureLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureLoader.swift; sourceTree = "<group>"; };
-		326E95552C5835BC00957BCC /* TrainAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainAssembly.swift; sourceTree = "<group>"; };
 		3274A47A2C235CA9000ED7B3 /* MeshInteraction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeshInteraction.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3274A48B2C235CAA000ED7B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3274A48E2C235CAA000ED7B3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -70,7 +69,6 @@
 		3274A4AB2C23662E000ED7B3 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		32801E1E2C25DA7D000D8910 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3299873D2C3D8A4300CD701D /* ModelHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelHandler.swift; sourceTree = "<group>"; };
-		3299873F2C3D8B4300CD701D /* LaMa.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = LaMa.mlpackage; sourceTree = "<group>"; };
 		329987412C3D8B4900CD701D /* u2netp.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = u2netp.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,6 +91,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3214FB272CB2D7FB002FE251 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				3214FB252CB2D7FB002FE251 /* edge_sam_3x_decoder.mlpackage */,
+				3214FB262CB2D7FB002FE251 /* edge_sam_3x_encoder.mlpackage */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
 		323319C92C2DC9F800CCEC62 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -111,7 +118,7 @@
 		326E95482C57FF4100957BCC /* SAM */ = {
 			isa = PBXGroup;
 			children = (
-				326E95522C57FF6400957BCC /* models */,
+				3214FB272CB2D7FB002FE251 /* models */,
 				326E95412C57FF4100957BCC /* mask.metal */,
 				326E95422C57FF4100957BCC /* MaskProcessor.swift */,
 				326E95432C57FF4100957BCC /* SharedInputs.h */,
@@ -121,15 +128,6 @@
 				326E95472C57FF4100957BCC /* SegmentAnything.swift */,
 			);
 			path = SAM;
-			sourceTree = "<group>";
-		};
-		326E95522C57FF6400957BCC /* models */ = {
-			isa = PBXGroup;
-			children = (
-				326E954E2C57FF5200957BCC /* edge_sam_3x_encoder.mlpackage */,
-				326E95502C57FF6000957BCC /* edge_sam_3x_decoder.mlpackage */,
-			);
-			path = models;
 			sourceTree = "<group>";
 		};
 		3274A4712C235CA9000ED7B3 = {
@@ -158,15 +156,14 @@
 				3274A4A82C23662E000ED7B3 /* AppState.swift */,
 				3274A4A92C23662E000ED7B3 /* ContentView.swift */,
 				3274A4AA2C23662E000ED7B3 /* ImmersiveView.swift */,
-				326E95552C5835BC00957BCC /* TrainAssembly.swift */,
 				32317EAD2C5031EB00A3D1DA /* ImageTrackingView.swift */,
 				3274A4AB2C23662E000ED7B3 /* ViewModel.swift */,
 				326E95532C58009300957BCC /* TextureLoader.swift */,
 				3299873D2C3D8A4300CD701D /* ModelHandler.swift */,
 				32801E1E2C25DA7D000D8910 /* Extensions.swift */,
 				326E95482C57FF4100957BCC /* SAM */,
-				3299873F2C3D8B4300CD701D /* LaMa.mlpackage */,
 				329987412C3D8B4900CD701D /* u2netp.mlmodel */,
+				3214FB212CB2D769002FE251 /* LaMa.mlpackage */,
 				3211789E2C29F7F80075DD73 /* applepay.mp3 */,
 				3274A48B2C235CAA000ED7B3 /* Assets.xcassets */,
 				3274A4902C235CAA000ED7B3 /* Info.plist */,
@@ -288,11 +285,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3214FB282CB2D85B002FE251 /* edge_sam_3x_decoder.mlpackage in Sources */,
+				3214FB292CB2D85B002FE251 /* edge_sam_3x_encoder.mlpackage in Sources */,
 				3299873E2C3D8A4900CD701D /* ModelHandler.swift in Sources */,
 				3274A4AC2C23662E000ED7B3 /* ImmersiveView.swift in Sources */,
 				329987422C3D8B4900CD701D /* u2netp.mlmodel in Sources */,
 				32317EAE2C5031F000A3D1DA /* ImageTrackingView.swift in Sources */,
-				329987402C3D8B4300CD701D /* LaMa.mlpackage in Sources */,
 				32801E1F2C25DA7F000D8910 /* Extensions.swift in Sources */,
 				3274A4AD2C23662E000ED7B3 /* ViewModel.swift in Sources */,
 				326E95492C57FF4100957BCC /* ImageProcessor.swift in Sources */,
@@ -300,12 +298,10 @@
 				326E954B2C57FF4100957BCC /* SegmentAnything.swift in Sources */,
 				326E954C2C57FF4100957BCC /* MaskProcessor.swift in Sources */,
 				326E954D2C57FF4100957BCC /* mask.metal in Sources */,
-				326E95512C57FF6000957BCC /* edge_sam_3x_decoder.mlpackage in Sources */,
 				3274A4AE2C23662E000ED7B3 /* MeshInteractionApp.swift in Sources */,
+				3214FB222CB2D769002FE251 /* LaMa.mlpackage in Sources */,
 				326E95542C58009300957BCC /* TextureLoader.swift in Sources */,
-				326E95562C5835C700957BCC /* TrainAssembly.swift in Sources */,
 				3274A4AF2C23662E000ED7B3 /* AppState.swift in Sources */,
-				326E954F2C57FF5200957BCC /* edge_sam_3x_encoder.mlpackage in Sources */,
 				3274A4B02C23662E000ED7B3 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -461,6 +457,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -489,6 +486,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

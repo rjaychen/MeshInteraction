@@ -28,9 +28,6 @@ struct MeshInteractionApp: App {
                 appState: appState
             )
         }
-        ImmersiveSpace(id: "Train Assembly") {
-            TrainAssembly(appState: appState)
-        }
         .onChange(of: scenePhase, initial: true) {
             if scenePhase != .active {
                 if appState.isImmersiveSpaceOpened {

@@ -22,18 +22,24 @@ class ViewModel {
     ]
     
     /// Variables I added
-    private var boundingBox: Entity? = nil
-    private var topLeftBackVert: SIMD3<Float> = [0, 0, 0]
-    private var bottomRightFrontVert: SIMD3<Float> = [0, 0, 0]
+//    private var boundingBox: Entity? = nil
+//    private var topLeftBackVert: SIMD3<Float> = [0, 0, 0]
+//    private var bottomRightFrontVert: SIMD3<Float> = [0, 0, 0]
+    /// Bounding Radius Variables
     private var location3D: SIMD3<Float> = [0, 0, 0]
     private var meshAnchors = [UUID: MeshAnchor]()
     private var newMeshes = [ModelEntity]()
     private var audioFilePath = "/applepay.mp3"
+    /// Shader Graph materials
     private var projectiveMaterial: ShaderGraphMaterial? = nil
     private var matrixMaterial: ShaderGraphMaterial? = nil
     private var blurMaterial: ShaderGraphMaterial? = nil
     private var tableMaterial: ShaderGraphMaterial? = nil
+    /// Image Tracking Anchors
     private var imageAnchors: [UUID: Entity] = [:]
+    /// Data Collection Variables
+    private var timer = Timer()
+    private var dataArray: [Dictionary<String, AnyObject>] = Array()
     
     func loadMaterial() async {
         projectiveMaterial = try! await ShaderGraphMaterial(named: "/Root/ProjectMaterial", from: "ProjectMaterial", in: realityKitContentBundle)
@@ -354,6 +360,29 @@ class ViewModel {
         guard let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
             else { return .init() }
             return deviceAnchor.originFromAnchorTransform
+    }
+    
+    @MainActor
+    func getTransformUpdates() async {
+        print("Starting Data Collection")
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+            Task {
+                if self.worldTracking.state == .running {
+                    let transform = await self.getDeviceTransform()
+                    /// make function here
+                    var dct = Dictionary<String, AnyObject>()
+                    let date = Date()
+                    dct.updateValue(date as AnyObject, forKey: "date")
+                    dct.updateValue(transform as AnyObject,
+                                    forKey: "transform")
+                    self.dataArray.append(dct)
+                    ///
+                } else {
+                    self.timer.invalidate()
+                    createCSV(from: self.dataArray)
+                }
+            }
+        })
     }
     
     func makeXRotationMatrix(angle: Float) -> simd_float4x4 {
