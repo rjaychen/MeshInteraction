@@ -61,9 +61,6 @@ func anchorToWorld(anchorMatrix: simd_float4x4, pos: SIMD3<Float>) -> SIMD3<Floa
     return worldPosition
 }
 
-func updateCSVTransformData(from dataArray: [Dictionary<String, AnyObject>], transform: simd_float4x4) {
-}
-
 func createCSV(from data:[Dictionary<String, AnyObject>]) {
     var csvString = "\("Time"),\("Transform")\n\n"
     for dct in data {

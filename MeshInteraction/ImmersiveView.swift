@@ -16,7 +16,7 @@ struct ImmersiveView: View {
             Task {
                 await viewModel.loadMaterial()
                 await viewModel.runARKitSession()
-                await viewModel.getTransformUpdates()
+                // await viewModel.getTransformUpdates()
             }
         }
         .task {
